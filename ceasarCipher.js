@@ -12,6 +12,7 @@ what to do about punctuation*/
 could hold letter values in a set i.e a: 0, b: 1, loop through set to find value, return key with value + shift
 
 work out edge cases for a -shift and z+shift
+moving backwards, convert to a forward move, i.e -1 = +25
 
 remove punctuation add back in at end
 
@@ -30,6 +31,12 @@ export function ceasarCipher(string, shift) {
       /* wrap z-a */
       if (!alpha[alpha.indexOf(stringArr[i] + shift)]) {
         let counter = 0;
+
+        /* converts a backwards shift into the forward equivalent */
+        if (shift < 0) {
+          shift += alpha.length;
+        }
+
         while (alpha[alpha.indexOf(stringArr[i]) + counter]) {
           counter++;
         }
@@ -57,4 +64,4 @@ function alphabetArray() {
   alphabet.forEach((value, index) => alphaMap.set(value, index));
   return alphabet;
 }
-console.log(ceasarCipher("xyz", 3));
+//console.log(ceasarCipher("xyz", 3));
