@@ -15,3 +15,11 @@ test("Shift abc backwards by 1 place", () => {
 test("Shift abc backwards by 3 places", () => {
   expect(ceasarCipher("abc", -3)).toBe("xyz");
 });
+
+test("Contains numbers shift forward one place", () => {
+  expect(ceasarCipher("ab1c", 1)).toBe("bc1d");
+});
+
+test("Contains letters, numbers and punctuation, shift forward by 5", () => {
+  expect(ceasarCipher("d0es th!5 w0rk?", 5)).toBe("i0jx ym!5 b0wp?");
+});

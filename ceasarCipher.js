@@ -14,6 +14,8 @@ could hold letter values in a set i.e a: 0, b: 1, loop through set to find value
 work out edge cases for a -shift and z+shift
 moving backwards, convert to a forward move, i.e -1 = +25
 
+numbers...?
+
 remove punctuation add back in at end
 
 what about capitals...?
@@ -44,6 +46,10 @@ export function ceasarCipher(string, shift) {
         shiftedString.push(alpha[remainder]);
       }
       shiftedString.push(alpha[alpha.indexOf(stringArr[i]) + shift]);
+    } else {
+      /* not shifting punctuation of numbers, just pop them back in the string in the order they came, 
+       only performing a shift on letters.  */
+      shiftedString.push(stringArr[i]);
     }
 
     // shiftedString.push(alphaMap)
