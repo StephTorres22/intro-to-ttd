@@ -4,60 +4,58 @@ returns string with every char shifted by factor
 
 i.e abc, 3 => def
 
-think about wrapping around a - z
 
-what to do about punctuation*/
 
-/* break string down
-could hold letter values in a set i.e a: 0, b: 1, loop through set to find value, return key with value + shift
+ break string down
 
-work out edge cases for a -shift and z+shift
 moving backwards, convert to a forward move, i.e -1 = +25
-
-numbers...?
-
-remove punctuation add back in at end
 
 what about capitals...?
 
-do i use a regex..?*/
-
+*/
+/* this does not work for larger numbers e.g 83... */
 export function ceasarCipher(string, shift) {
   const alpha = alphabetArray();
-  const shiftedString = [];
+  const shiftedStringArr = [];
   const stringArr = string.toLowerCase().split("");
+  const capitalsIndex = [];
+
+  /* make a note of capital letters position in original string */
+  for (let i = 0; i < string.length; i++) {
+    if (isUppercase(string[i])) {
+      capitalsIndex.push(i);
+    }
+  }
 
   for (let i = 0; i < stringArr.length; i++) {
     /* check char is in alphabet */
     if (alpha.includes(stringArr[i])) {
+      /* need to change this to make it work with large numbers, recursion... */
       /* wrap z-a */
       if (!alpha[alpha.indexOf(stringArr[i] + shift)]) {
-        let counter = 0;
-
-        /* converts a backwards shift into the forward equivalent */
-        if (shift < 0) {
-          shift += alpha.length;
-        }
-
-        while (alpha[alpha.indexOf(stringArr[i]) + counter]) {
-          counter++;
-        }
-        let remainder = shift - counter;
-        shiftedString.push(alpha[remainder]);
+        shiftedStringArr.push(wrap(alpha, stringArr, shift, i));
+        //console.log(wrap(alpha, stringArr, shift, i), shiftedStringArr[i]);
       }
-      shiftedString.push(alpha[alpha.indexOf(stringArr[i]) + shift]);
     } else {
       /* not shifting punctuation of numbers, just pop them back in the string in the order they came, 
        only performing a shift on letters.  */
-      shiftedString.push(stringArr[i]);
+      shiftedStringArr.push(stringArr[i]);
     }
-
-    // shiftedString.push(alphaMap)
   }
-  return shiftedString.join("");
-}
 
-//console.log(ceasarCipher());
+  // shiftedString.push(alphaMap)
+
+  /* if capitals were present in original string, capitalise the now shifted letter in the correct position. */
+
+  let shiftedString = shiftedStringArr.join("");
+  if (capitalsIndex.length > 0) {
+    for (let i = 0; i < capitalsIndex.length; i++) {
+      shiftedString = upperCaseAt(shiftedString, capitalsIndex[i]);
+    }
+  }
+
+  return shiftedString;
+}
 
 function alphabetArray() {
   /* make a new array with 26 items with value 0, take index add 65 to it and set value at i to that number */
@@ -70,4 +68,35 @@ function alphabetArray() {
   alphabet.forEach((value, index) => alphaMap.set(value, index));
   return alphabet;
 }
-//console.log(ceasarCipher("xyz", 3));
+
+export function isUppercase(ch) {
+  return ch == ch.toLowerCase() ? false : ch == ch.toUpperCase() ? true : false;
+}
+
+function upperCaseAt(str, i) {
+  return str.substr(0, i) + str.charAt(i).toUpperCase() + str.substr(i + 1);
+}
+
+function wrap(arr, stringArr, shift, index) {
+  if (arr[arr.indexOf(stringArr[index] + shift)]) {
+    return arr[arr.indexOf(stringArr[index] + shift)];
+  } else {
+    let counter = 0;
+
+    /* converts a backwards shift into the forward equivalent if need to wrap*/
+    if (shift < 0) {
+      shift += arr.length;
+    }
+
+    while (arr[arr.indexOf(stringArr[index]) + counter]) {
+      counter++;
+    }
+    let remainder = shift - counter;
+
+    if (!arr[arr.indexOf(stringArr[index]) + remainder]) {
+      wrap(arr, stringArr, remainder, index);
+    }
+  }
+}
+
+console.log(ceasarCipher("aBcdE1!3hIjK61.", 1));
