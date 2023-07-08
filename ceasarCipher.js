@@ -21,52 +21,35 @@ export function ceasarCipher(string, shift) {
   const capitalsIndex = [];
 
   /* make a note of capital letters position in original string */
-  for (let i = 0; i < string.length; i++) {
-    if (isUppercase(string[i])) {
-      capitalsIndex.push(i);
-    }
-  }
+  checkForCaptials(string, capitalsIndex);
 
   for (let i = 0; i < stringArr.length; i++) {
     /* check char is in alphabet */
     if (alpha.includes(stringArr[i])) {
+      if (shift < 0) {
+        shift += alpha.length;
+      }
       /* need to change this to make it work with large numbers, recursion... */
       /* wrap z-a */
       if (!alpha[alpha.indexOf(stringArr[i]) + shift]) {
-        let counter = 0;
+        let remainder = wrap(alpha, stringArr[i], shift);
 
-        if (shift < 0) {
-          shift += alpha.length;
-        }
-
-        while (alpha[alpha.indexOf(string[i]) + counter]) {
-          counter++;
-        }
-
-        let remainder = shift - counter;
         shiftedStringArr.push(alpha[remainder]);
       }
 
       shiftedStringArr.push(alpha[alpha.indexOf(stringArr[i]) + shift]);
-      //shiftedStringArr.push(alpha[alpha.indexOf(stringArr[i]) + shift]);
+
+      /* REPEATITION! */
     } else {
-      //console.log(shiftedStringArr);
       /* not shifting punctuation of numbers, just pop them back in the string in the order they came, 
        only performing a shift on letters.  */
       shiftedStringArr.push(stringArr[i]);
     }
-
-    // shiftedString.push(alphaMap)
   }
-  /* if capitals were present in original string, capitalise the now shifted letter in the correct position. */
 
   let shiftedString = shiftedStringArr.join("");
-  if (capitalsIndex.length > 0) {
-    for (let i = 0; i < capitalsIndex.length; i++) {
-      shiftedString = upperCaseAt(shiftedString, capitalsIndex[i]);
-    }
-  }
-  return shiftedString;
+
+  return reinsertCapitals(shiftedString, capitalsIndex);
 }
 
 function alphabetArray() {
@@ -90,27 +73,30 @@ function upperCaseAt(str, i) {
 }
 
 function wrap(arr, char, shift) {
-  /*  if (arr[arr.indexOf(char) + shift]) {
-    // console.log(arr[arr.indexOf(char) + shift]);
-    return arr[arr.indexOf(char) + shift];
-  } */
-
   let counter = 0;
-
-  /* converts a backwards shift into the forward equivalent if need to wrap*/
-  /* if (shift < 0) {
-    shift += arr.length;
-  } */
 
   while (arr[arr.indexOf(char) + counter]) {
     counter++;
   }
-  let remainder = shift - counter;
 
-  if (arr[arr.indexOf(char) + remainder]) {
-    // console.log(arr[arr.indexOf(char) + remainder]);
-    return arr[arr.indexOf(char) + remainder];
-  } else wrap(arr, char, remainder);
+  return shift - counter;
+}
+
+function reinsertCapitals(str, arr) {
+  if (arr.length > 0) {
+    for (let i = 0; i < arr.length; i++) {
+      str = upperCaseAt(str, arr[i]);
+    }
+  }
+  return str;
+}
+
+function checkForCaptials(str, store) {
+  for (let i = 0; i < str.length; i++) {
+    if (isUppercase(str[i])) {
+      store.push(i);
+    }
+  }
 }
 
 //(ceasarCipher("aBcdE1!3hIjK61.", 80));

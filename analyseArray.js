@@ -7,12 +7,15 @@ length
 
 write tests first!*/
 
+/* don't really need any of these, especially get length, but makes it helpful to test individual components */
+
 export const getAverage = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 
 export const getMin = (arr) => Math.min(...arr);
 
 export const getMax = (arr) => Math.max(...arr);
 
+/* don't need this */
 export const getLength = (arr) => arr.length;
 
 export function analyseArray(arr) {
@@ -20,6 +23,6 @@ export function analyseArray(arr) {
     average: getAverage(arr),
     minimum: getMin(arr),
     maximum: getMax(arr),
-    length: getLength(arr),
+    length: arr.length,
   };
 }
